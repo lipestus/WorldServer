@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace GameModels
 {
     public class Tags
@@ -11,9 +6,11 @@ namespace GameModels
         public enum MessageTypes : ushort
         {
             // Player related
-            PlayerConnected = 30,
-            PlayerMovement = 31,
-            PlayerInput = 32,
+            SpawnPlayer = 30,
+            RequestSpawnPlayer = 31,
+            PlayerConnected = 32,
+            PlayerMovement = 33,
+            PlayerInput = 34,
         }
     }
 }

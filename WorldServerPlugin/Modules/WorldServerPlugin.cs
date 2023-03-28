@@ -17,11 +17,13 @@ namespace WorldServerPlugin
         public string WorldServerName { get; set; }
 
         private PlayerManager playerManager;
+        private PlayerSpawner playerSpawner;
 
         public WorldServerPlugin(PluginLoadData pluginLoadData) : base(pluginLoadData)
         {
             WorldServerName = pluginLoadData.Settings["WorldServerName"] ?? "DefaultWorldServerName";
             playerManager = new PlayerManager(BroadcastMessageToAllClients);
+            playerSpawner = new PlayerSpawner(playerManager, BroadcastMessageToAllClients);
             InitialiseListeners();
         }
 
@@ -36,9 +38,6 @@ namespace WorldServerPlugin
         {
             int playerId = e.Client.ID;
 
-            // Add the player to the PlayerManager
-            playerManager.AddPlayer(playerId, new Player(playerId, 0, 0));
-
             // Log the player ID
             Console.WriteLine($"Player {playerId} connected to the world...");
 
@@ -49,9 +48,6 @@ namespace WorldServerPlugin
             e.Client.MessageReceived -= OnMessageReceived;
             var playerId = e.Client.ID;
 
-            // Remove the player from the PlayerManager
-            playerManager.RemovePlayer(playerId);
-
             // Log the player ID
             Console.WriteLine($"Player {playerId} disconnected from the world...");
         }
@@ -60,6 +56,18 @@ namespace WorldServerPlugin
         {
             using (Message message = e.GetMessage())
             {
+                if (message.Tag == (ushort)Tags.MessageTypes.RequestSpawnPlayer)
+                {
+                    var requestSpawnPlayerMessage = message.Deserialize<RequestSpawnPlayerMessage>();
+                    int playerId = requestSpawnPlayerMessage.PlayerID;
+                    Console.WriteLine($"Player {playerId} requested spawn...");
+
+                    Player newPlayer = new Player(playerId, 0f, 0f);
+
+                    // Spawn the player using the PlayerSpawner
+                    playerSpawner.SpawnPlayer(playerId, newPlayer);
+                }
+
                 if (message.Tag == (ushort)Tags.MessageTypes.PlayerInput)
                 {
                     PlayerInputMessage playerInputMessage = message.Deserialize<PlayerInputMessage>();

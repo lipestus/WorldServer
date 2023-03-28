@@ -46,6 +46,7 @@
     <Compile Include="Modules\WorldServerPlugin.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="PlayerManager.cs" />
+    <Compile Include="PlayerSpawner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

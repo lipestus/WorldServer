@@ -46,6 +46,8 @@
   <ItemGroup>
     <Compile Include="Models\PlayerInputMessage.cs" />
     <Compile Include="Models\PlayerMovementMessage.cs" />
+    <Compile Include="Models\PlayerSpawnMessage.cs" />
+    <Compile Include="Models\RequestSpawnPlayerMessage.cs" />
     <Compile Include="Tags.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

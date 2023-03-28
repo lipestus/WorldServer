@@ -50,6 +50,11 @@ namespace WorldServerPlugin
             }
         }
 
+        public void BroadcastMessage(Message message)
+        {
+            broadcastMessage(message);
+        }
+
         private void BroadcastPlayerMovementMessage(Player player)
         {
             using (DarkRiftWriter writer = DarkRiftWriter.Create())
