@@ -5,6 +5,7 @@ using DarkRift.Server;
 using GameModels;
 using GameModels.Models;
 using System.Threading;
+using WorldServerPlugin.Game;
 
 namespace WorldServerPlugin
 {
@@ -18,13 +19,20 @@ namespace WorldServerPlugin
 
         private PlayerManager playerManager;
         private PlayerSpawner playerSpawner;
+        private AOIManager aoiManager;
+
+        private Game.Game game;
 
         public WorldServerPlugin(PluginLoadData pluginLoadData) : base(pluginLoadData)
         {
             WorldServerName = pluginLoadData.Settings["WorldServerName"] ?? "DefaultWorldServerName";
-            playerManager = new PlayerManager(BroadcastMessageToAllClients);
+            game = new Game.Game();
+            playerManager = new PlayerManager(BroadcastMessageToAllClients, game.AOIManager);
             playerSpawner = new PlayerSpawner(playerManager, BroadcastMessageToAllClients);
             InitialiseListeners();
+
+            
+            _ = game.Run();
         }
 
         private void InitialiseListeners()
@@ -42,6 +50,7 @@ namespace WorldServerPlugin
             Console.WriteLine($"Player {playerId} connected to the world...");
 
             e.Client.MessageReceived += OnMessageReceived;
+            game.AddClient(e.Client);
         }
         private void ClientManager_ClientDisconnected(object sender, ClientDisconnectedEventArgs e)
         {
@@ -50,6 +59,23 @@ namespace WorldServerPlugin
 
             // Log the player ID
             Console.WriteLine($"Player {playerId} disconnected from the world...");
+
+            DespawnPlayerMessage despawnPlayerMessage = new DespawnPlayerMessage
+            {
+                PlayerID = playerId,
+            };
+
+            using Message message = Message.Create((ushort)Tags.MessageTypes.DespawnPlayer, despawnPlayerMessage);
+            foreach (var client in ClientManager.GetAllClients())
+            {
+                if (client.ID != playerId)
+                {
+                    client.SendMessage(message, SendMode.Reliable);
+                }
+            }
+
+            playerSpawner.DespawnPlayer(playerId);
+            game.RemoveClient(e.Client);
         }
 
         private void OnMessageReceived(object sender, MessageReceivedEventArgs e)
@@ -85,7 +111,10 @@ namespace WorldServerPlugin
         {
             foreach (IClient client in ClientManager.GetAllClients())
             {
-                client.SendMessage(message, SendMode.Reliable);
+                if (client.ConnectionState == ConnectionState.Connected)
+                {
+                    client.SendMessage(message, SendMode.Reliable);
+                }
             }
         }
     }

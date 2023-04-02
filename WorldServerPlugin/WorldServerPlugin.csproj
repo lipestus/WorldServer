@@ -12,6 +12,7 @@
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -42,7 +43,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AtomicCounter.cs" />
+    <Compile Include="Entity.cs" />
+    <Compile Include="Game\AOIManager.cs" />
+    <Compile Include="Game\Game.cs" />
+    <Compile Include="GridBounds.cs" />
     <Compile Include="Modules\WorldServerPlugin.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="PlayerManager.cs" />
@@ -62,6 +66,9 @@
       <Project>{c2d50862-5ef2-4462-87bb-4dfd573d86c4}</Project>
       <Name>GameModels</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="DataStructs\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

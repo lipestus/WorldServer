@@ -7,10 +7,15 @@ namespace GameModels
         {
             // Player related
             SpawnPlayer = 30,
-            RequestSpawnPlayer = 31,
-            PlayerConnected = 32,
-            PlayerMovement = 33,
-            PlayerInput = 34,
+            DespawnPlayer = 31,
+            RequestSpawnPlayer = 32,
+            PlayerConnected = 33,
+            PlayerMovement = 34,
+            PlayerInput = 35,
+
+            //AOI grid data
+            AOIGridData = 40,
+            AOIGridDataAndBounds = 41,
         }
     }
 }

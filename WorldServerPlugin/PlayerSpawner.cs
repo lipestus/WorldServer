@@ -46,6 +46,11 @@ namespace WorldServerPlugin
             BroadcastSpawnPlayerMessage(player);
         }
 
+        public void DespawnPlayer(int playerId)
+        {
+            playerManager.RemovePlayer(playerId);
+        }
+
         private (float, float) GetNextSpawnPoint()
         {
             // Get the next available spawn point

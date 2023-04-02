@@ -44,6 +44,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataStructs\SerializableGridBounds.cs" />
+    <Compile Include="DataStructs\Vector2Int.cs" />
+    <Compile Include="Models\AOIGridDataAndBoundsMessage.cs" />
+    <Compile Include="Models\AOIGridDataMessage.cs" />
+    <Compile Include="Models\DespawnPlayerMessage.cs" />
     <Compile Include="Models\PlayerInputMessage.cs" />
     <Compile Include="Models\PlayerMovementMessage.cs" />
     <Compile Include="Models\PlayerSpawnMessage.cs" />

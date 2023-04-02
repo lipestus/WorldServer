@@ -2,6 +2,7 @@
 using GameModels.Models;
 using GameModels;
 using System.Collections.Generic;
+using WorldServerPlugin.Game;
 
 namespace WorldServerPlugin
 {
@@ -10,11 +11,13 @@ namespace WorldServerPlugin
         private Dictionary<int, Player> players;
         public delegate void BroadcastMessageDelegate(Message message);
         private BroadcastMessageDelegate broadcastMessage;
+        private readonly AOIManager aoiManager;
 
-        public PlayerManager(BroadcastMessageDelegate broadcastMessage)
+        public PlayerManager(BroadcastMessageDelegate broadcastMessage, AOIManager aoiManager)
         {
             players = new Dictionary<int, Player>();
             this.broadcastMessage = broadcastMessage;
+            this.aoiManager = aoiManager;
         }
 
         public void AddPlayer(int playerId, Player player)
@@ -26,6 +29,11 @@ namespace WorldServerPlugin
         public void RemovePlayer(int playerId)
         {
             // Remove the player from the dictionary
+            if (players.TryGetValue(playerId, out Player player))
+            {
+                aoiManager.RemoveEntity(player);
+            }
+               
             players.Remove(playerId);
         }
 
@@ -38,8 +46,10 @@ namespace WorldServerPlugin
             // Update the player's position
             if (players.TryGetValue(playerId, out Player player))
             {
-                player.PositionX += newX;
-                player.PositionY += newY;
+                float newPositionX = player.PositionX + newX;
+                float newPositionY = player.PositionY + newY;
+
+                aoiManager.UpdateEntity(player, newPositionX, newPositionY);
 
                 // Broadcast the updated position to all clients
                 BroadcastPlayerMovementMessage(player);
